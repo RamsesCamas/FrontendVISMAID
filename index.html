@@ -110,8 +110,8 @@
             const resultBlob = await response.blob();
             const url = URL.createObjectURL(resultBlob);
             resultAudio.src = url;
-            // No reproducir automáticamente en móviles; el usuario debe dar play
-            // resultAudio.play();  eliminado
+            // Reproducción automática en todos los dispositivos
+            resultAudio.play();
 
             // Resetear botones
             startBtn.disabled = false;
