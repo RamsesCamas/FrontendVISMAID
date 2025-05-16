@@ -34,15 +34,23 @@
     const stopBtn = document.getElementById('stopBtn');
     const resultAudio = document.getElementById('resultAudio');
 
+    // Detectar dispositivo móvil
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
     let videoStream;
     let audioStream;
     let mediaRecorder;
     let audioChunks = [];
 
-    // Inicializar cámara
+    // Inicializar cámara con preferencia por cámara trasera en móviles
     async function initCamera() {
       try {
-        videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        const constraints = {
+          video: isMobile
+            ? { facingMode: { ideal: 'environment' } }
+            : { facingMode: 'user' }
+        };
+        videoStream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = videoStream;
       } catch (err) {
         console.error('Error al acceder a la cámara:', err);
@@ -102,7 +110,8 @@
             const resultBlob = await response.blob();
             const url = URL.createObjectURL(resultBlob);
             resultAudio.src = url;
-            resultAudio.play();
+            // No reproducir automáticamente en móviles; el usuario debe dar play
+            // resultAudio.play();  eliminado
 
             // Resetear botones
             startBtn.disabled = false;
